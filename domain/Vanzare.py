@@ -1,45 +1,60 @@
-class Vanzare(object):
-    ID = 0
-    titlu_carte = ""
-    gen_carte = ""
-    pret = 0
-    tip_reducere = ""
+def creeazaVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client):
+    '''
+    creeaza o vanzare
+    :param id: string
+    :param titlu_carte: string
+    :param gen_carte: string
+    :param pret: float
+    :param tip_reducere_client: string
+    :return: o lista ce retine o vanzare
+    '''
+    return {'id': id, 'titlu_carte': titlu_carte, 'gen_carte': gen_carte, 'pret': pret, 'tip_reducere_client': tip_reducere_client}
 
-    def __init__(self, id , titlu , gen , pret , tip ):
-        self.ID = id
-        self.titlu_carte = titlu
-        self.gen_carte = gen
-        self.pret = pret
-        self.tip_reducere = tip
+def getId(vanzare):
+    '''
+    ia id-ul vanzarii
+    :param vanzare: tuple de tipul vanzare
+    :return: id-ul vanzarii
+    '''
+    return vanzare['id']
 
-    def get_ID(self):
-        return self.ID
+def getTitluCarte(vanzare):
+    '''
+    ia titlul cartii
+    :param vanzare: tuple de tipul vanzare
+    :return: titlul cartii
+    '''
+    return vanzare['titlu_carte']
 
-    def get_titlu_carte(self):
-        return self.titlu_carte
+def getGenCarte(vanzare):
+    '''
+    ia genul cartii
+    :param vanzare: tuple de tipul vanzare
+    :return: genul cartii
+    '''
+    return vanzare['gen_carte']
 
-    def get_gen_carte(self):
-        return self.gen_carte
+def getPret(vanzare):
+    '''
+    ia pretul cartii
+    :param vanzare: tuple de tipul vanzare
+    :return: pretul cartii
+    '''
+    return vanzare['pret']
 
-    def get_pret(self):
-        return self.pret
+def getTipReducereClient(vanzare):
+    '''
+    ia tipul reducerii clientului
+    :param vanzare: tuple de tipul vanzare
+    :return: tipul reducerii clientului
+    '''
+    return vanzare['tip_reducere_client']
 
-    def get_tip_reducere(self):
-        return self.tip_reducere
-
-    def set_titlu_carte(self, titlu):
-        self.titlu_carte = titlu
-
-    def set_gen_carte(self, gen):
-        self.gen_carte = gen
-
-    def set_pret(self, pret):
-        self.pret = pret
-
-    def set_tip_reducere(self, tip):
-        self.tip_reducere = tip
-
-    def to_string(self):
-        return str(self.ID) +  " "  + self.titlu_carte + " " + self.gen_carte + " " + str(self.pret) + " " + self.tip_reducere
-
-
+def toString(vanzare):
+    return "id: {}, titlu carte: {}, gen carte: {}, pret: {}, tip reducere client: {}".format(
+        getId(vanzare),
+        getTitluCarte(vanzare),
+        getGenCarte(vanzare),
+        getPret(vanzare),
+        getTipReducereClient(vanzare)
+    )

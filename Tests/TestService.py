@@ -1,51 +1,79 @@
-from domain.Vanzare import Vanzare
-from logic.service import Service
+from domain.Vanzare import getId, getTitluCarte, getGenCarte, getPret, getTipReducereClient
+from logic.service import adaugareVanzare, getById, stergereVanzare, modificareVanzare
 
-def test_service():
-    '''
 
-    :return:
-    '''
-    serv = Service()
-    vanzari = serv.get_all()
-    assert (len(vanzari) == 0)
-    serv.add(10, "Ion", "Drama", 25, "gold")
-    vanzari = serv.get_all()
-    assert (len(vanzari) == 1)
-    try:
-        serv.add(10, "Ion", "Drama", 25, "gold")
-    except Exception as e:
-        assert(str(e) == "Vanzare deja existenta! \n")
-    serv.modificare(10, "John", "Comedie", 24.99 , "silver")
-    vanzari = serv.get_all()
-    assert (vanzari[0].get_titlu_carte() == "John")
-    assert (vanzari[0].get_gen_carte() == "Comedie")
-    assert (vanzari[0].get_pret() == 24.99)
-    assert (vanzari[0].get_tip_reducere() == "silver")
-    try:
-        serv.modificare(19, "Ion", "Drama", 25, "gold")
-    except Exception as e:
-        assert (str(e) == "Nu se poate modifica ! \n")
-    serv.stergere(10)
-    vanzari = serv.get_all()
-    assert (len(vanzari) == 0)
-    try:
-        serv.stergere(11)
-    except Exception as e:
-        assert (str(e) == "Nu se poate sterge ! \n")
+def testAdaugareVanzare():
+    lista = []
+    lista = adaugareVanzare("1", "Enigma Otiliei", "drama", 30, "gold", lista)
 
-    serv.add(14, "Ioana", "Feminin", 69, "gold")
-    serv.add(15, "Ioana", "Neutru" , 70 , "none")
-    serv.modificare_gen("Ioana", "Masculin")
-    vanzari = serv.get_all()
-    assert (vanzari[0].get_gen_carte() == "Masculin")
-    assert (vanzari[1].get_gen_carte() == "Masculin")
+    assert len(lista) == 1
+    assert getId(getById("1", lista)) == "1"
+    assert getTitluCarte(getById("1", lista)) == "Enigma Otiliei"
+    assert getGenCarte(getById("1", lista)) == "drama"
+    assert getPret(getById("1", lista)) == 30
+    assert getTipReducereClient(getById("1", lista)) == "gold"
+
+def testStergereVanzare():
+    lista = []
+    lista = adaugareVanzare("1", "Enigma Otiliei", "drama", 30, "gold", lista)
+    lista = adaugareVanzare("2", "Razboiul Stelelor", "fictiune", 50, "silver", lista)
+    lista = stergereVanzare("1", lista)
+
+    assert len(lista) == 1
+    assert getById("1", lista) is None
+    assert getById("2", lista) is not None
 
     try:
-        serv.modificare_gen("Ionel", "Neutru")
-    except Exception as e:
-        assert (str(e) == "Nu se poate modifica ! \n")
+        lista = stergereVanzare("3", lista)
+        assert False
+    except ValueError:
+        assert len(lista) == 1
+        assert getById("2", lista) is not None
+    except Exception:
+        assert False
 
+def testModificareVanzare():
+    lista = []
+    lista = adaugareVanzare("1", "Enigma Otiliei", "fantastic", 30, "gold", lista)
+    lista = adaugareVanzare("2", "Razboiul Stelelor", "fictiune", 50, "silver", lista)
 
+    lista = modificareVanzare("1", "Dune", "fictiune", 80, "none", lista)
+
+    vanzareModificata = getById("1", lista)
+    assert getId(vanzareModificata) == "1"
+    assert getTitluCarte(vanzareModificata) == "Dune"
+    assert getGenCarte(vanzareModificata) == "fictiune"
+    assert getPret(vanzareModificata) == 80
+    assert getTipReducereClient(vanzareModificata) == "none"
+
+    vanzareNemodificata = getById("2", lista)
+    assert getId(vanzareNemodificata) == "2"
+    assert getTitluCarte(vanzareNemodificata) == "Razboiul Stelelor"
+    assert getGenCarte(vanzareNemodificata) == "fictiune"
+    assert getPret(vanzareNemodificata) == 50
+    assert getTipReducereClient(vanzareNemodificata) == "silver"
+
+    lista = []
+    lista = adaugareVanzare("1", "Enigma Otiliei", "drama", 30, "gold", lista)
+
+    try:
+        lista = modificareVanzare("3", "Razboiul Stelelor", "fictiune", 50, "silver", lista)
+    except ValueError:
+        vanzareNemodificata = getById("1", lista)
+        assert getId(vanzareNemodificata) == "1"
+        assert getTitluCarte(vanzareNemodificata) == "Enigma Otiliei"
+        assert getGenCarte(vanzareNemodificata) == "drama"
+        assert getPret(vanzareNemodificata) == 30
+        assert getTipReducereClient(vanzareNemodificata) == "gold"
+    except Exception:
+        assert False
+
+def testGetById():
+    lista = []
+    lista = adaugareVanzare("1", "Enigma Otiliei", "drama", 30, "gold", lista)
+    lista = adaugareVanzare("2", "Razboiul Stelelor", "fictiune", 50, "silver", lista)
+    assert getById("1", lista) == lista[0]
+    assert getById("2", lista) == lista[1]
+    assert getById("3", lista) is None
 
 
