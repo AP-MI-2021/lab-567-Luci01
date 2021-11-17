@@ -1,4 +1,48 @@
-from domain.Vanzare import getId, creeazaVanzare
+from domain.Vanzare2 import getId, creeazaVanzare
+
+
+def adaugareVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client, lista):
+    '''
+    adauga o vanzare intr-o lista
+    :param id: string
+    :param titlu_carte: string
+    :param gen_carte: string
+    :param pret: float
+    :param tip_reducere_client: string
+    :param lista: lista de vanzari
+    :return: o lista continand atat elementele vechi, cat si vanzarea nou adaugata
+    '''
+    vanzare = creeazaVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client)
+    return lista + [vanzare]
+
+def stergereVanzare(id, lista):
+    '''
+    sterge o vanzare dintr-o lista
+    :param id: id-ul vanzarii care trebuie sterse
+    :param lista: lista de vanzari
+    :return: lista continuand vechile elemente mai putin vanzarea care a fost stearsa
+    '''
+    return [vanzare for vanzare in lista if getId(vanzare) != id]
+
+def modificareVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client, lista):
+    '''
+    modifica vanzarea cu id-ul dat dintr-o lista
+    :param id: string
+    :param titlu_carte: string
+    :param gen_carte: string
+    :param pret: float
+    :param tip_reducere_client: string
+    :param lista: o lista de vanzari
+    :return: lista modificata
+    '''
+    listaNoua = []
+    for vanzare in lista:
+        if getId(vanzare) == id:
+            vanzareNoua = creeazaVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client)
+            listaNoua.append(vanzareNoua)
+        else:
+            listaNoua.append(vanzare)
+    return listaNoua
 
 def getById(id, lista):
     '''
@@ -11,38 +55,3 @@ def getById(id, lista):
         if getId(vanzare) == id:
             return vanzare
     return None
-
-
-def adaugareVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client, lista):
-
-    if getById(id, lista) is not None:
-        raise ValueError("Id-ul deja exista! ")
-    vanzare = creeazaVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client)
-    return lista + [vanzare]
-def adaugaVanzareUndoRedo(id, titlu_carte, gen_carte, pret, tip_reducere_client, lista, undoList, redoList):
-
-    if getById(id, lista) is not None:
-        raise ValueError("Id-ul deja exista! ")
-    vanzare = creeazaVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client)
-    undoList.append(lista)
-    redoList.clear()
-    return lista + [vanzare]
-
-def stergereVanzare(id, lista):
-
-    if getById(id, lista) is None:
-        raise ValueError("Nu exista o vanzare cu id-ul specificat!")
-    return [vanzare for vanzare in lista if getId(vanzare) != id]
-
-def modificareVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client, lista):
-
-    if getById(id, lista) is None:
-        raise ValueError("Nu exista o vanzare cu id-ul specificat!")
-    listaNoua = []
-    for vanzare in lista:
-        if getId(vanzare) == id:
-            vanzareNoua = creeazaVanzare(id, titlu_carte, gen_carte, pret, tip_reducere_client)
-            listaNoua.append(vanzareNoua)
-        else:
-            listaNoua.append(vanzare)
-    return listaNoua
